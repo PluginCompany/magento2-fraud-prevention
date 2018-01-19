@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+  <default>
+    <plugincompany_fraudprevention>
+      <plugincompany_fraudprevention_payment>
+        <enable>0</enable>
+      </plugincompany_fraudprevention_payment>
+      <plugincompany_fraudprevention_customeraccount>
+        <message>There is a problem with your account. Please contact support for assistance.</message>
+      </plugincompany_fraudprevention_customeraccount>
+      <plugincompany_fraudprevention_group>
+        <address_type>1</address_type>
+      </plugincompany_fraudprevention_group>
+      <plugincompany_fraudprevention_ordernotification>
+          <send_order_confirmation>1</send_order_confirmation>
+      </plugincompany_fraudprevention_ordernotification>
+    </plugincompany_fraudprevention>
+  </default>
+</config>

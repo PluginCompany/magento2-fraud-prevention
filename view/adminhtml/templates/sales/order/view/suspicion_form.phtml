@@ -1,0 +1,71 @@
+<?php /** @var \PluginCompany\FraudPrevention\Block\Adminhtml\Sales\Order\View\SuspicionForm $this */ ?>
+<div style="display:none" id="fraud_suspicion_record_form_modal">
+    <form id="fraud_suspicion_record_form" method="post" action="<?php echo $this->getFormSubmitUrl(); ?>">
+        <div class="row">
+            <div class="col-xs-12 admin__form-field-control ">
+                <?php if($this->canShowAddressSelect()){ ?>
+                    <div class="admin__field">
+                        <label class="admin__field-label" for="suspicion_address_type">
+                            <?php echo __('Address Type'); ?>
+                        </label>
+                        <div class="admin__field-control">
+                            <select id="suspicion_address_type" name="suspicion_address_type" class="admin__control-select">
+                                <?php if($this->canShowShippingAddressOption()){ ?>
+                                    <option value="shipping"><?php echo __('Shipping Address'); ?></option>
+                                <?php } ?>
+                                <option value="billing"><?php echo __('Billing Address'); ?></option>
+                                <option value="both"><?php echo __('Both Addresses'); ?></option>
+                            </select>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if($this->canShowCommentField()){ ?>
+                    <div class="admin__field">
+                        <label class="admin__field-label" for="suspicion_comment">
+                            <?php echo __('Comments'); ?>
+                        </label>
+                        <div class="admin__field-control">
+                            <textarea id="suspicion_comment" name="suspicion_comment" class="admin__control-textarea"></textarea>
+                        </div>
+                    </div>
+                <?php } ?>
+                <input type="hidden" name="form_key" value="<?php echo $this->getFormKey(); ?>" />
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    require([
+        'underscore',
+        'Magento_Ui/js/modal/modal',
+        'Magento_Ui/js/modal/confirm',
+        'jquery'
+    ], function (
+        _,
+        Modal,
+        Confirm,
+        $
+    ) {
+        var suspicionModal = $('#fraud_suspicion_record_form_modal').modal({
+                title: 'Add Fraud Suspicion Record',
+                autoOpen: false,
+                closed: function () {
+                    // on close
+                },
+                buttons: [{
+                    text: 'Submit',
+                    attr: {
+                        'data-action': 'confirm'
+                    },
+                    'class': 'action-primary',
+                    click: function () {
+                        $('#fraud_suspicion_record_form').submit();
+                    }
+                }]
+            }
+        );
+       window.showFraudSuspicionForm = function(){
+           suspicionModal.modal('openModal');
+       }
+    })
+</script>

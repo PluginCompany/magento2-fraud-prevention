@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="PluginCompany::fraudprevention_top"
+			 module="PluginCompany_FraudPrevention"
+			 resource="PluginCompany_FraudPrevention::General"
+			 parent="Magento_Sales::sales"
+			 sortOrder="9999"
+			 title="Fraud Prevention"
+		/>
+		<add id="PluginCompany::plugincompany_fraudprevention_rule"
+			 action="plugincompany_fraudprevention/rule/index"
+			 module="PluginCompany_FraudPrevention"
+			 parent="PluginCompany::fraudprevention_top"
+			 resource="PluginCompany_FraudPrevention::Rule"
+			 sortOrder="10"
+			 title="Blacklisting Rules"
+		/>
+		<add id="PluginCompany::plugincompany_fraudprevention_suspicion"
+			 action="plugincompany_fraudprevention/suspicion/index"
+			 module="PluginCompany_FraudPrevention"
+			 parent="PluginCompany::fraudprevention_top"
+			 resource="PluginCompany_FraudPrevention::Suspicion"
+			 sortOrder="20"
+			 title="Fraud Suspicions"
+		/>
+		<add id="PluginCompany::plugincompany_fraudprevention_config"
+			 action="adminhtml/system_config/edit/section/plugincompany_fraudprevention"
+			 module="PluginCompany_FraudPrevention"
+			 parent="PluginCompany::fraudprevention_top"
+			 resource="PluginCompany_FraudPrevention::General"
+			 sortOrder="30"
+			 title="Configuration"
+		/>
+	</menu>
+</config>

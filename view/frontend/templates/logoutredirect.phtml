@@ -1,0 +1,14 @@
+<script>
+    (function() {
+        var origOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function() {
+            console.log('request started!');
+            this.addEventListener('load', function() {
+                if(this.responseText.indexOf('pc_fraud_prevention_error_redirect') !== -1){
+                    window.location.replace('<?php echo $this->getErrorUrl(); ?>')
+                }
+            });
+            origOpen.apply(this, arguments);
+        };
+    })();
+</script>
