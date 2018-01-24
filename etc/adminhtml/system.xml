@@ -7,7 +7,7 @@
     <section id="plugincompany_fraudprevention" translate="label" sortOrder="10000" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
       <label>Fraud Prevention</label>
       <tab>plugincompany</tab>
-      <resource>PluginCompany_FraudPrevention::system_config</resource>
+      <resource>PluginCompany_FraudPrevention::Config</resource>
       <group id="plugincompany_fraudprevention_group" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Fraud Suspicion Settings</label>
         <field id="address_type" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
