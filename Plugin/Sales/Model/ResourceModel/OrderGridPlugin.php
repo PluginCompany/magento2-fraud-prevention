@@ -58,7 +58,21 @@ class OrderGridPlugin
                 ]
             )
         ;
+        $this->addMainTableToCreatedAtSelect();
         return $this;
+    }
+
+    private function addMainTableToCreatedAtSelect() {
+        $select = $this->collection->getSelect();
+        if ($where = $select->getPart('where')) {
+            foreach ($where as $key=> $condition) {
+                if (stristr($condition, 'created_at') && !stristr("`main_table`.`created_at`", $condition)) {
+                    $new_condition = str_replace("`created_at`", ("`main_table`.`created_at`"), $condition);
+                    $where[$key] = $new_condition;
+                }
+            }
+            $select->setPart('where', $where);
+        }
     }
 
     private function getGroupedSuspicionCollectionSql()
