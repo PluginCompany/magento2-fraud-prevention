@@ -7,6 +7,7 @@
  */
 namespace PluginCompany\FraudPrevention\Plugin\Sales\Model\ResourceModel;
 
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\ResourceModel\Order\Grid\Collection;
 use PluginCompany\FraudPrevention\Model\ResourceModel\Suspicion\Collection as SuspicionCollection;
@@ -22,27 +23,45 @@ class OrderGridPlugin
      * @var Registry
      */
     private $registry;
-
-    /** @var  Collection $collection */
+    /**
+     * @var Collection $collection
+     */
     private $collection;
+    /**
+     * @var RequestInterface
+     */
+    private $request;
 
     public function __construct(
         SuspicionCollection $suspicionCollection,
-        Registry $registry
+        Registry $registry,
+        RequestInterface $request
     ) {
         $this->suspicionCollection = $suspicionCollection;
         $this->registry = $registry;
+        $this->request = $request;
     }
 
     public function beforeLoad(Collection $collection)
     {
         if($this->alreadyJoined()) return;
+        if($this->isCustomerOrderGrid()) return;
 
         $this->collection = $collection;
         $this
             ->joinSuspicionField()
             ->registerJoin()
         ;
+    }
+
+    private function alreadyJoined()
+    {
+        return $this->registry->registry('suspicion_marked_column_joined' );
+    }
+
+    private function isCustomerOrderGrid()
+    {
+        return $this->request->getModuleName() == 'customer';
     }
 
     private function joinSuspicionField()
@@ -93,8 +112,4 @@ class OrderGridPlugin
         return $this;
     }
 
-    private function alreadyJoined()
-    {
-        return $this->registry->registry('suspicion_marked_column_joined' );
-    }
 }
