@@ -218,8 +218,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
 
     protected function _addOrderAttrToAddress(Array $address, $order)
     {
-        $address['customer_ip'] = $order->getRealRemoteAddress();
-//        $address['email_domain'] = Mage::helper('plugincompany_fraudprevention')->getEmailDomain($address['email']);
+        $address['customer_ip'] = $order->getRemoteIp();
         return $address;
     }
 

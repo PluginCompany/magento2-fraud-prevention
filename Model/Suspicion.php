@@ -70,59 +70,6 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
         return $values;
     }
 
-    public function addByOrderId($orderId,$adminId = null, $comment = null,$addressType = null)
-    {
-        if ($this->loadByOrderId($orderId)) {
-            throw new \Exception('Order already marked as suspicious');
-        }
-
-        $order = $this->salesOrderFactory->create()->load($orderId);
-
-        if (!$addressType) {
-            switch($this->scopeConfig->getValue('plugincompany_fraudprevention/plugincompany_fraudprevention_group/address_type', \Magento\Store\Model\ScopeInterface::SCOPE_STORE,$order->getStore())){
-                case 1:
-                    $addressType = 'shipping';
-                    break;
-                case 2:
-                    $addressType = 'billing';
-                    break;
-                case 3:
-                    $addressType = 'both';
-                    break;
-                case 0:
-                    throw new \Exception('No address type selected to blacklist');
-            }
-        }
-
-        $addressData = array();
-        if ($order->getShippingAddress() && ($addressType == 'shipping' || $addressType == 'both')) {
-            $addressData[] = $order->getShippingAddress()->getData();
-        }
-        if ($addressType == 'billing' || $addressType == 'both') {
-            $addressData[] = $order->getBillingAddress()->getData();
-        }
-
-
-        foreach ($addressData as $address) {
-            $this
-                ->setData($address)
-                ->setCustomerIp($order->getRealRemoteAddress())
-                ->setEntityId(null)
-                ->setMarkedByAdmin($adminId)
-                ->setOrderId($orderId)
-                ->setComment($comment)
-                ->save()
-            ;
-        }
-
-        //save order to allow aftersave event, this will cause order to be blacklisted
-        $order
-            ->setNothing(true)
-            ->save();
-
-        return $this;
-    }
-
     public function removeByOrderId($orderId)
     {
         if ($collection = $this->loadByOrderId($orderId)) {

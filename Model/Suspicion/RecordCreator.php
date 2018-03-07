@@ -70,7 +70,6 @@ class RecordCreator
         foreach ($this->getAddressData() as $address) {
             $suspicion = $this->suspicionFactory->create()
                 ->setData($address)
-                ->setCustomerIp($this->order->getRealRemoteAddress())
                 ->setEntityId(null)
                 ->setMarkedByAdmin($adminId)
                 ->setOrderId($orderId)
