@@ -8,11 +8,12 @@
 namespace PluginCompany\FraudPrevention\Controller\Error;
 
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use PluginCompany\FraudPrevention\Helper\Data;
 
-class Redirect extends \Magento\Framework\App\Action\Action
+class Redirect extends Action
 {
     /**
      * @var Data
@@ -39,13 +40,12 @@ class Redirect extends \Magento\Framework\App\Action\Action
     public function __construct(
         Context $context,
         Data $helper,
-        Session $customerSession,
-        RedirectFactory $redirectFactory
+        Session $customerSession
     ){
         parent::__construct($context);
         $this->helper = $helper;
         $this->customerSession = $customerSession;
-        $this->redirectFactory = $redirectFactory;
+        $this->redirectFactory = $context->getResultRedirectFactory();
     }
     public function execute()
     {
