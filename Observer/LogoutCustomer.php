@@ -10,10 +10,19 @@ namespace PluginCompany\FraudPrevention\Observer;
 use Magento\Framework\Event\Observer;
 use PluginCompany\FraudPrevention\Controller\Error\Redirect;
 use PluginCompany\FraudPrevention\Model\Attribute\Source\Customeraccount;
-use Magento\Framework\Stdlib\Cookie\CookieMetadata;
 
 class LogoutCustomer extends AbstractObserver
 {
+    /**
+     * @var \Magento\Framework\App\Request\Http
+     */
+    private $request;
+
+    /**
+     * @var \Magento\Framework\App\Action\Action
+     */
+    private $controllerAction;
+
     /**
      * Execute Observer
      *
@@ -22,17 +31,31 @@ class LogoutCustomer extends AbstractObserver
      */
     public function execute(Observer $observer)
     {
-        if($observer->getEvent()->getControllerAction() instanceof Redirect){
+        $this->request = $observer->getEvent()->getRequest();
+        $this->controllerAction = $observer->getEvent()->getControllerAction();
+
+        if($this->isRedirect()) {
             return;
         }
-        $session = $this->customerSession;
-        if($session->isLoggedIn()){
-            $customer = $session->getCustomer();
-            if($customer->getPcBlacklisted() == Customeraccount::BLACKLISTED){
-                $this->logoutCustomerAndRedirectToHomePage();
-            }
+        if(!$this->isCustomerBlacklisted()) {
+            return;
         }
+        $this->logoutCustomerAndRedirectToHomePage();
     }
 
+    private function isRedirect()
+    {
+        return $this->controllerAction instanceof Redirect;
+    }
+
+    private function isCustomerBlacklisted()
+    {
+        $session = $this->customerSession;
+        if(!$session->isLoggedIn()) {
+            return false;
+        }
+        $customer = $session->getCustomer();
+        return $customer->getPcBlacklisted() == Customeraccount::BLACKLISTED;
+    }
 
 }

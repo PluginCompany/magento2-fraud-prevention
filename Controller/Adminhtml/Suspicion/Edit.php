@@ -57,8 +57,8 @@ class Edit extends \PluginCompany\FraudPrevention\Controller\Adminhtml\Suspicion
             $id ? __('Edit Suspicion') : __('New Suspicion'),
             $id ? __('Edit Suspicion') : __('New Suspicion')
         );
-        $resultPage->getConfig()->getTitle()->prepend(__('Suspicions'));
-        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Suspicion'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Fraud Suspicions'));
+        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? __("Fraud Record #") . $model->getId() : __('New Suspicion'));
         return $resultPage;
     }
 }

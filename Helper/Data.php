@@ -39,7 +39,7 @@ class Data
 
     public function getEmailDomain($email)
     {
-        $email = explode('@',$email);
+        $email = explode('@', $email);
         if(isset($email[1])){
             return $email[1];
         }
@@ -94,5 +94,17 @@ class Data
                 ScopeInterface::SCOPE_STORE
             );
     }
-    
+
+    public function getExcludedEmailDomains()
+    {
+        $domains = explode(
+            "\n",
+            $this->scopeConfig->getValue(
+                'plugincompany_fraudprevention/field_matching/excluded_email_domains',
+                'store'
+            )
+        );
+        return array_map('trim', $domains);
+    }
+
 }

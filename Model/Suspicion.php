@@ -9,6 +9,8 @@
 namespace PluginCompany\FraudPrevention\Model;
 
 use PluginCompany\FraudPrevention\Api\Data\SuspicionInterface;
+use PluginCompany\FraudPrevention\Helper\FieldNormalizationSettings;
+use PluginCompany\FraudPrevention\Helper\FieldNormalizer;
 
 class Suspicion extends \Magento\Framework\Model\AbstractModel implements SuspicionInterface
 {
@@ -29,18 +31,26 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $scopeConfig;
+    /**
+     * @var FieldNormalizer
+     */
+    private $fieldNormalizer;
+    /**
+     * @var FieldNormalizationSettings
+     */
+    private $fieldNormalizationSettings;
 
     public function __construct(
         \Magento\Sales\Model\OrderFactory $salesOrderFactory,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        FieldNormalizer $fieldNormalizer,
+        FieldNormalizationSettings $fieldNormalizationSettings,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        $this->salesOrderFactory = $salesOrderFactory;
-        $this->scopeConfig = $scopeConfig;
         parent::__construct(
             $context,
             $registry,
@@ -48,6 +58,10 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
             $resourceCollection,
             $data
         );
+        $this->salesOrderFactory = $salesOrderFactory;
+        $this->scopeConfig = $scopeConfig;
+        $this->fieldNormalizer = $fieldNormalizer;
+        $this->fieldNormalizationSettings = $fieldNormalizationSettings;
     }
 
     /**
@@ -518,5 +532,64 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
     public function setCustomerIp($customer_ip)
     {
         return $this->setData(self::CUSTOMER_IP, $customer_ip);
+    }
+
+    public function beforeSave()
+    {
+        parent::beforeSave();
+        $this->updateNormalizedFields();
+        return $this;
+    }
+    private function updateNormalizedFields()
+    {
+        return $this
+            ->updateNormalizedTextFields()
+            ->updateNormalizedNameFields()
+            ->updateNormalizedPhoneFields()
+            ;
+    }
+
+    private function updateNormalizedTextFields()
+    {
+        foreach($this->fieldNormalizationSettings->getTextFieldCodes() as $field)
+        {
+            $this->setData(
+                $field . '_normalized',
+                $this->getNormalizedFieldValue($field, 'text')
+            );
+        }
+        return $this;
+    }
+
+    private function updateNormalizedNameFields()
+    {
+        foreach($this->fieldNormalizationSettings->getNameFieldCodes() as $field)
+        {
+            $this->setData(
+                $field . '_normalized',
+                $this->getNormalizedFieldValue($field, 'name')
+            );
+        }
+        return $this;
+    }
+
+    private function updateNormalizedPhoneFields()
+    {
+        foreach($this->fieldNormalizationSettings->getPhoneFieldCodes() as $field)
+        {
+            $this->setData(
+                $field . '_normalized',
+                $this->getNormalizedFieldValue($field, 'phone')
+            );
+        }
+        return $this;
+    }
+
+    private function getNormalizedFieldValue($field, $type)
+    {
+        $func = 'normalize' . ucfirst($type);
+        return $this->fieldNormalizer->{$func}(
+            $this->getData($field)
+        );
     }
 }

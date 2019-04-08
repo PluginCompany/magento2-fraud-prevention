@@ -9,7 +9,11 @@
 namespace PluginCompany\FraudPrevention\Model;
 
 use PluginCompany\FraudPrevention\Api\Data\RuleInterface;
+use PluginCompany\FraudPrevention\Helper\FieldMatchingSettings;
+use PluginCompany\FraudPrevention\Helper\FieldNormalizationSettings;
+use PluginCompany\FraudPrevention\Helper\FieldNormalizer;
 use PluginCompany\FraudPrevention\Model\Attribute\Source\Customeraccount;
+use PluginCompany\FraudPrevention\Model\ResourceModel\Suspicion\CollectionFactory;
 
 class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterface
 {
@@ -35,6 +39,22 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
      * @var \PluginCompany\FraudPrevention\Model\Resource\Item\CollectionFactory
      */
     private $blacklistResourceItemCollectionFactory;
+    /**
+     * @var FieldNormalizationSettings
+     */
+    private $fieldNormalizationSettings;
+    /**
+     * @var FieldNormalizer
+     */
+    private $fieldNormalizer;
+    /**
+     * @var FieldMatchingSettings
+     */
+    private $fieldMatchingSettings;
+    /**
+     * @var \PluginCompany\FraudPrevention\Helper\Data
+     */
+    private $helper;
 
     /**
      * @return \Magento\Framework\Stdlib\DateTime\DateTime
@@ -58,14 +78,15 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTimeDateTime,
         \Magento\Customer\Model\CustomerFactory $customerCustomerFactory,
-        \PluginCompany\FraudPrevention\Model\ResourceModel\Suspicion\CollectionFactory $blacklistResourceItemCollectionFactory,
+        CollectionFactory $blacklistResourceItemCollectionFactory,
+        FieldNormalizationSettings $fieldNormalizationSettings,
+        FieldNormalizer $fieldNormalizer,
+        FieldMatchingSettings $fieldMatchingSettings,
+        \PluginCompany\FraudPrevention\Helper\Data $helper,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        $this->dateTimeDateTime = $dateTimeDateTime;
-        $this->customerCustomerFactory = $customerCustomerFactory;
-        $this->blacklistResourceItemCollectionFactory = $blacklistResourceItemCollectionFactory;
         parent::__construct(
             $context,
             $registry,
@@ -73,6 +94,13 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
             $resourceCollection,
             $data
         );
+        $this->dateTimeDateTime = $dateTimeDateTime;
+        $this->customerCustomerFactory = $customerCustomerFactory;
+        $this->blacklistResourceItemCollectionFactory = $blacklistResourceItemCollectionFactory;
+        $this->fieldNormalizationSettings = $fieldNormalizationSettings;
+        $this->fieldNormalizer = $fieldNormalizer;
+        $this->fieldMatchingSettings = $fieldMatchingSettings;
+        $this->helper = $helper;
     }
 
     /**
@@ -98,6 +126,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
     /**
      * Can pass either order or quote object
      * @param \Magento\Sales\Model\Order|\Magento\Sales\Model\Quote $order
+     * @return bool
      */
     public function canBlacklistOrder($order)
     {
@@ -124,7 +153,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
 
         if ($shipAddr = $order->getShippingAddress()) {
             $shippingAddress = $order->getShippingAddress()->getData();
-            $shippingAddress = $this->_addOrderAttrToAddress($shippingAddress , $order);
+            $shippingAddress = $this->_addOrderAttrToAddress($shippingAddress, $order);
         }else{
             $shippingAddress = false;
         }
@@ -160,9 +189,6 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
         $rules->addCustomerGroupFilter($groupId);
 
         $addressData = $address->getData();
-        if(!isset($addressData['email'])){
-            $addressData['email'] = $customer->getEmail();
-        }
 
         foreach ($rules as $rule) {
             $attributes = explode(',', $rule->getAttributes());
@@ -175,38 +201,91 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
 
     public function checkRuleTrigger($attributes, $address, $strikes)
     {
-        if (!$address) {
+        if (empty($address)) {
+            return false;
+        }
+
+        if(isset($address['email'])) {
+            $address['email_domain'] = $this->helper->getEmailDomain($address['email']);
+        }
+
+        $attributes = $this->removeEmailDomainFromAttributesIfExcluded($attributes, $address);
+        if(empty($attributes)) {
             return false;
         }
 
         //if customer is guest and rule is based on customer ID
         // rule should not be triggered
         $customerId = isset($address['customer_id']) ? $address['customer_id'] : null;
-        if(!$customerId && in_array('customer_id',$attributes)){
+        if(!$customerId && in_array('customer_id', $attributes)){
             return false;
         }
 
         $collection = $this->blacklistResourceItemCollectionFactory->create();
         foreach ($attributes as $code) {
             $attrVal = isset($address[$code]) ? $address[$code] : null;
+
+            if($this->fieldNormalizationSettings->shouldNormalizeField($code)) {
+                $attrVal = $this->getNormalizedValue($attrVal, $code);
+                $code = $code . '_normalized';
+            }
+
             $collection->addFieldToFilter($code,
-                array(
-                    array('eq' => $attrVal),
-                    array('null' => true)
-                )
+                [
+                    $this->fieldMatchingSettings->getFilterForAttribute($code, $attrVal),
+                    ['null' => true]
+                ]
             );
         }
 
         //remove all results of which all attributes are NULL
         foreach($collection as $k => $item){
-            if($this->_isAllNull($item,$attributes)){
+            if($this->_isAllNull($item, $attributes)){
                 $collection->removeItemByKey($k);
             }
         }
 
-        if ($collection->count() >= $strikes) {
+        if ($collection->getTotalStrikes() >= $strikes) {
             return true;
         }
+    }
+
+    private function removeEmailDomainFromAttributesIfExcluded($attributes, $address)
+    {
+        if(!isset($address['email_domain'])) {
+            return $attributes;
+        }
+        if(!in_array('email_domain', $attributes)) {
+            return $attributes;
+        }
+        if(in_array($address['email_domain'], $this->getExcludedEmailDomains())) {
+            return array_diff($attributes, array('email_domain'));
+        }
+        return $attributes;
+    }
+
+    private function getExcludedEmailDomains()
+    {
+        return $this->helper->getExcludedEmailDomains();
+    }
+
+    private function getNormalizedValue($value, $attributeCode)
+    {
+        if(!$value) {
+            return $value;
+        }
+        if(!$this->fieldNormalizationSettings->shouldNormalizeField($attributeCode)) {
+            return $value;
+        }
+        $strategy = $this->fieldNormalizationSettings
+            ->getNormalizationStrategyForField($attributeCode);
+        return $this->normalize($value, $strategy);
+    }
+
+    private function normalize($value, $type)
+    {
+        $func = 'normalize' . ucfirst($type);
+        return $this->fieldNormalizer->{$func}($value);
     }
 
     protected function _isAllNull($item, $attributes){

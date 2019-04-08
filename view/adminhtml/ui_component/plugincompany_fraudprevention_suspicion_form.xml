@@ -296,6 +296,21 @@
 					</item>
 				</item>
 			</argument>
+        </field>
+        <field name="weight">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">int</item>
+                    <item name="label" translate="true" xsi:type="string">Weight (Strikes)</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">Suspicion</item>
+                    <item name="dataScope" xsi:type="string">weight</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="notice" xsi:type="string" translate="true">The weight determines the amount of 'strikes' that are counted when a match is found between a customer address and this suspicion record based on a blacklisting rule. The default value is 1, set it to 0 for instant blocking (infinite strikes).</item>
+                </item>
+            </argument>
 		</field>
 	</fieldset>
 </form>

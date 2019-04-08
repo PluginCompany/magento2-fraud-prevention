@@ -219,9 +219,7 @@ abstract class AbstractObserver implements ObserverInterface
         $customer->setPcBlacklisted(Customeraccount::BLACKLISTED);
         try{
             $this->customerRepository->save($customer->getDataModel());
-        }catch(\Throwable $e){
-            $bla = 1;
-        }
+        }catch(\Throwable $e){ }
         return $this;
     }
 
@@ -235,10 +233,13 @@ abstract class AbstractObserver implements ObserverInterface
         $this->actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH_BLOCK_EVENT, true);
         $this->actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
         if($this->_appRequestInterface->isAjax()){
-            return $this->response
-//                ->setRedirect($this->urlBuilder->getBaseUrl())
-                ->setBody('pc_fraud_prevention_error_redirect')
-                ->sendResponse();
+            if(!$this->_appRequestInterface->isPost()) {
+                return;
+            }
+            $response = $this->response;
+            $response->setBody('pc_fraud_prevention_error_redirect');
+            $response->setNoCacheHeaders();
+            return $response->sendResponse();
         }
         return $this->response
             ->setRedirect($this->urlBuilder->getUrl('plugincompany_fraudprevention/error/redirect'))

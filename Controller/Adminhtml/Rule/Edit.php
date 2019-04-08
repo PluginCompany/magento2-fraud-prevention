@@ -57,8 +57,8 @@ class Edit extends \PluginCompany\FraudPrevention\Controller\Adminhtml\Rule
             $id ? __('Edit Rule') : __('New Rule'),
             $id ? __('Edit Rule') : __('New Rule')
         );
-        $resultPage->getConfig()->getTitle()->prepend(__('Rules'));
-        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Rule'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Blacklisting Rules'));
+        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getName() : __('New Rule'));
         return $resultPage;
     }
 }

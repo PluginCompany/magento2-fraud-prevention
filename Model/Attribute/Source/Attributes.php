@@ -37,6 +37,12 @@ class Attributes implements OptionSourceInterface
             if (in_array($k, array('marked_by_admin', 'entity_id', 'updated_at', 'created_at', 'status'))) {
                continue;
             }
+            if(stristr($k, 'normalized')) {
+                continue;
+            }
+            if($k == 'weight') {
+                continue;
+            }
             $array[] = array('label' => ucwords(str_replace('_',' ',$k)),'value'=>$k);
         }
 

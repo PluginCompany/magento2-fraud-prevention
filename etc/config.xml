@@ -1,19 +1,178 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-  <default>
-    <plugincompany_fraudprevention>
-      <plugincompany_fraudprevention_payment>
-        <enable>0</enable>
-      </plugincompany_fraudprevention_payment>
-      <plugincompany_fraudprevention_customeraccount>
-        <message>There is a problem with your account. Please contact support for assistance.</message>
-      </plugincompany_fraudprevention_customeraccount>
-      <plugincompany_fraudprevention_group>
-        <address_type>1</address_type>
-      </plugincompany_fraudprevention_group>
-      <plugincompany_fraudprevention_ordernotification>
-          <send_order_confirmation>1</send_order_confirmation>
-      </plugincompany_fraudprevention_ordernotification>
-    </plugincompany_fraudprevention>
-  </default>
+    <default>
+        <plugincompany_fraudprevention>
+            <plugincompany_fraudprevention_payment>
+                <enable>0</enable>
+            </plugincompany_fraudprevention_payment>
+            <plugincompany_fraudprevention_customeraccount>
+                <message>There is a problem with your account. Please contact support for assistance.</message>
+            </plugincompany_fraudprevention_customeraccount>
+            <plugincompany_fraudprevention_group>
+                <address_type>1</address_type>
+            </plugincompany_fraudprevention_group>
+            <plugincompany_fraudprevention_ordernotification>
+                <send_order_confirmation>1</send_order_confirmation>
+            </plugincompany_fraudprevention_ordernotification>
+            <field_normalization>
+                <normalize_firstname>1</normalize_firstname>
+                <normalize_middlename>1</normalize_middlename>
+                <normalize_lastname>1</normalize_lastname>
+                <normalize_street>1</normalize_street>
+                <normalize_city>1</normalize_city>
+                <normalize_postcode>1</normalize_postcode>
+                <normalize_region>1</normalize_region>
+                <normalize_telephone>1</normalize_telephone>
+                <normalize_fax>1</normalize_fax>
+                <normalize_company>1</normalize_company>
+            </field_normalization>
+            <field_matching>
+                <match_last_xx_digits_phone>0</match_last_xx_digits_phone>
+                <phone_digits_to_match>7</phone_digits_to_match>
+                <match_last_xx_digits_fax>0</match_last_xx_digits_fax>
+                <fax_digits_to_match>7</fax_digits_to_match>
+                <excluded_email_domains>
+aol.com
+att.net
+comcast.net
+facebook.com
+gmail.com
+gmx.com
+googlemail.com
+google.com
+hotmail.com
+hotmail.co.uk
+mac.com
+me.com
+mail.com
+msn.com
+live.com
+sbcglobal.net
+verizon.net
+yahoo.com
+yahoo.co.uk
+email.com
+fastmail.fm
+games.com
+gmx.net
+hush.com
+hushmail.com
+icloud.com
+iname.com
+inbox.com
+lavabit.com
+love.com
+outlook.com
+pobox.com
+protonmail.com
+rocketmail.com
+safe-mail.net
+wow.com
+ygm.com
+ymail.com
+zoho.com
+yandex.com
+bellsouth.net
+charter.net
+cox.net
+earthlink.net
+juno.com
+btinternet.com
+virginmedia.com
+blueyonder.co.uk
+freeserve.co.uk
+live.co.uk
+ntlworld.com
+o2.co.uk
+orange.net
+sky.com
+talktalk.co.uk
+tiscali.co.uk
+virgin.net
+wanadoo.co.uk
+bt.com
+sina.com
+sina.cn
+qq.com
+naver.com
+hanmail.net
+daum.net
+nate.com
+yahoo.co.jp
+yahoo.co.kr
+yahoo.co.id
+yahoo.co.in
+yahoo.com.sg
+yahoo.com.ph
+163.com
+126.com
+aliyun.com
+foxmail.com
+hotmail.fr
+live.fr
+laposte.net
+yahoo.fr
+wanadoo.fr
+orange.fr
+gmx.fr
+sfr.fr
+neuf.fr
+free.fr
+gmx.de
+hotmail.de
+live.de
+online.de
+t-online.de
+web.de
+yahoo.de
+libero.it
+virgilio.it
+hotmail.it
+aol.it
+tiscali.it
+alice.it
+live.it
+yahoo.it
+email.it
+tin.it
+poste.it
+teletu.it
+mail.ru
+rambler.ru
+yandex.ru
+ya.ru
+list.ru
+hotmail.be
+live.be
+skynet.be
+voo.be
+tvcablenet.be
+telenet.be
+hotmail.com.ar
+live.com.ar
+yahoo.com.ar
+fibertel.com.ar
+speedy.com.ar
+arnet.com.ar
+yahoo.com.mx
+live.com.mx
+hotmail.es
+hotmail.com.mx
+prodigy.net.mx
+yahoo.com.br
+hotmail.com.br
+outlook.com.br
+uol.com.br
+bol.com.br
+terra.com.br
+ig.com.br
+itelefonica.com.br
+r7.com
+zipmail.com.br
+globo.com
+globomail.com
+oi.com.br</excluded_email_domains>
+            </field_matching>
+        </plugincompany_fraudprevention>
+    </default>
 </config>

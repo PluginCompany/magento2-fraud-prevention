@@ -27,6 +27,7 @@ class BlacklistOrder extends AbstractObserver
 
         if ($canBlacklist && $order->getStatus() != 'blacklisted') {
             //blacklist order
+            $order->addStatusToHistory(false, 'Last order status before order was blacklisted', false);
             $order->setStatus('blacklisted');
             $order->addStatusToHistory('blacklisted', 'Order automatically blacklisted due to blacklisting rule ' . $canBlacklist, false);
             $order->save();

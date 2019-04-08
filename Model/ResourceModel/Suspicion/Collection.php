@@ -23,4 +23,15 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             'PluginCompany\FraudPrevention\Model\ResourceModel\Suspicion'
         );
     }
+
+    public function getTotalStrikes()
+    {
+        $totalStrikes = 0;
+        foreach($this->getColumnValues('weight') as $weight) {
+            $weight = (int)$weight;
+            if($weight === 0) $weight = 9999999999999999;
+            $totalStrikes += $weight;
+        }
+        return $totalStrikes;
+    }
 }

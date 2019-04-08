@@ -1,76 +1,160 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
-  <system>
-    <tab id="plugincompany" translate="label" sortOrder="20000" class="plugin-company-config-tab">
-      <label>Plugin Company</label>
-    </tab>
-    <section id="plugincompany_fraudprevention" translate="label" sortOrder="10000" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-      <label>Fraud Prevention</label>
-      <tab>plugincompany</tab>
-      <resource>PluginCompany_FraudPrevention::Config</resource>
-      <group id="plugincompany_fraudprevention_group" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Fraud Suspicion Settings</label>
-        <field id="address_type" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Default fraud suspicion address</label>
-          <comment>Address to be included in the fraud suspicion record. If 'Both' is selected, two fraud suspicion records will be created for each suspicious order.</comment>
-          <source_model>PluginCompany\FraudPrevention\Model\Source\System\Config\AddressType</source_model>
-        </field>
-        <field id="show_comment" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Enable comments</label>
-          <comment>Show comment field when marking a suspicious order.</comment>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-      </group>
-      <group id="plugincompany_fraudprevention_customeraccount" translate="label" sortOrder="10" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Customer Blacklisting Settings</label>
-        <field id="afterorder" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Blacklist on fraudulent order</label>
-          <comment>Blacklist customer account when placing or updating a fraudulent order. Order is still submitted and marked as fraudulent, but customer will be logged out and blocked.</comment>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-        <field id="addresssave" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Blacklist on new address</label>
-          <comment>Blacklist customer account while adding a blacklisted address during checkout or in the account details. Customer will be logged out and blocked.</comment>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-        <field id="message" sortOrder="30" type="textarea" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Error message</label>
-          <comment>Message to be displayed when blacklisted customer is logged out or blocked from logging in.</comment>
-        </field>
-      </group>
-      <group id="plugincompany_fraudprevention_ordernotification" translate="label" sortOrder="15" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Order Confirmation Settings</label>
-        <field id="send_order_confirmation" translate="label" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Send order confirmation</label>
-          <comment>Send order confirmation e-mail if an order is blacklisted.</comment>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-      </group>
-      <group id="plugincompany_fraudprevention_payment" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Payment Processing Settings</label>
-        <field id="enable" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Block payment processing</label>
-          <comment>Block payments by hiding the payment methods section during checkout if blacklisted address is used.</comment>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-        <!--<field id="text" translate="label" sortOrder="20" type="textarea" showInDefault="1" showInWebsite="1" showInStore="1">-->
-          <!--<label>Error message</label>-->
-          <!--<comment>Message to be displayed instead of the payment methods section (HTML allowed).</comment>-->
-        <!--</field>-->
-      </group>
-      <group id="plugincompany_fraudprevention_paymentfailed" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Failed Payment Transaction Settings</label>
-        <field id="shipping" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Add shipping address suspicion</label>
-          <comment>Add a fraud suspicion strike to the shipping address when payment transaction fails.</comment>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-        <field id="billing" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Add billing address suspicion</label>
-          <comment>Add a fraud suspicion strike to the billing address when payment transaction fails.</comment>
-          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-      </group>
-    </section>
-  </system>
+    <system>
+        <tab id="plugincompany" translate="label" sortOrder="20000" class="plugin-company-config-tab">
+            <label>Plugin Company</label>
+        </tab>
+        <section id="plugincompany_fraudprevention" translate="label" sortOrder="10000" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Fraud Prevention</label>
+            <tab>plugincompany</tab>
+            <resource>PluginCompany_FraudPrevention::Config</resource>
+            <group id="plugincompany_fraudprevention_group" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Fraud Suspicion Settings</label>
+                <field id="address_type" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default fraud suspicion address</label>
+                    <comment>Address to be included in the fraud suspicion record. If 'Both' is selected, two fraud suspicion records will be created for each suspicious order.</comment>
+                    <source_model>PluginCompany\FraudPrevention\Model\Source\System\Config\AddressType</source_model>
+                </field>
+                <field id="show_comment" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable comments</label>
+                    <comment>Show comment field when marking a suspicious order.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="plugincompany_fraudprevention_customeraccount" translate="label" sortOrder="10" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Customer Blacklisting Settings</label>
+                <field id="afterorder" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Blacklist on fraudulent order</label>
+                    <comment>Blacklist customer account when placing or updating a fraudulent order. Order is still submitted and marked as fraudulent, but customer will be logged out and blocked.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="addresssave" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Blacklist on new address</label>
+                    <comment>Blacklist customer account while adding a blacklisted address during checkout or in the account details. Customer will be logged out and blocked.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="message" sortOrder="30" type="textarea" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Error message</label>
+                    <comment>Message to be displayed when blacklisted customer is logged out or blocked from logging in.</comment>
+                </field>
+            </group>
+            <group id="plugincompany_fraudprevention_ordernotification" translate="label" sortOrder="15" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Order Confirmation Settings</label>
+                <field id="send_order_confirmation" translate="label" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Send order confirmation</label>
+                    <comment>Send order confirmation e-mail if an order is blacklisted.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="plugincompany_fraudprevention_payment" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Payment Processing Settings</label>
+                <field id="enable" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Block payment processing</label>
+                    <comment>Block payments by hiding the payment methods section during checkout if blacklisted address is used.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <!--<field id="text" translate="label" sortOrder="20" type="textarea" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                <!--<label>Error message</label>-->
+                <!--<comment>Message to be displayed instead of the payment methods section (HTML allowed).</comment>-->
+                <!--</field>-->
+            </group>
+            <group id="plugincompany_fraudprevention_paymentfailed" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Failed Payment Transaction Settings</label>
+                <field id="shipping" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add shipping address suspicion</label>
+                    <comment>Add a fraud suspicion strike to the shipping address when payment transaction fails.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="billing" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add billing address suspicion</label>
+                    <comment>Add a fraud suspicion strike to the billing address when payment transaction fails.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="field_normalization" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Field Normalization Settings</label>
+                <comment>If normalization is enabled for a field and the field is being checked for previous fraudulent orders, all special characters and spaces will be stripped and all alphabetic characters will be converted to non-accented latin characters. In most cases normalization will have a positive effect on the amount of fraudulent orders being detected. </comment>
+                <field id="normalize_firstname" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Firstname</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_middlename" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Middlename</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_lastname" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Lastname</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_street" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Street</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_postcode" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Postcode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_city" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize City</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_region" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Region</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_telephone" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Telephone</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_fax" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Fax</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="normalize_company" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Normalize Company</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="field_matching" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Field Matching Settings</label>
+                <!--
+                <field id="allow_wildcard" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Wildcard</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If set to yes, admin users can add wild cards to fraud suspicioun fields by using the % character.</comment>
+                </field>
+                -->
+                <field id="match_last_xx_digits_phone" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Match Only Last xx Digits Phone</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If set to yes, you can specify the amount of digits of the phone number that should be compared. This can be handy if you'd like to exclude country codes or even area codes from the phone number comparison. Only available if field normalization is enabled for phone.</comment>
+                </field>
+                <field id="phone_digits_to_match" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Phone Digits to Match</label>
+                    <validate>required-entry integer validate-greater-than-zero</validate>
+                    <comment>The number of digits to match starting from the end of the number.</comment>
+                    <depends>
+                        <field id="match_last_xx_digits_phone">1</field>
+                    </depends>
+                </field>
+                <field id="match_last_xx_digits_fax" translate="label" sortOrder="30" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Match Only Last xx Digits Fax</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If set to yes, you can specify the amount of digits of the fax number that should be compared. Only available if field normalization is enabled for fax.</comment>
+                </field>
+                <field id="fax_digits_to_match" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fax Digits to Match</label>
+                    <validate>required-entry integer validate-greater-than-zero</validate>
+                    <comment>The number of digits to match starting from the end of the number.</comment>
+                    <depends>
+                        <field id="match_last_xx_digits_fax">1</field>
+                    </depends>
+                </field>
+                <field id="excluded_email_domains" sortOrder="50" type="textarea" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Excluded E-mail Domains</label>
+                    <comment>List of e-mail domains excluded from blacklisting rules based on the e-mail domain attribute. It's recommended to extend this list with common e-mail domain names relevant for your shop.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
 </config>
