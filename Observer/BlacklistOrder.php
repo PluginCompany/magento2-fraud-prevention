@@ -17,8 +17,29 @@ class BlacklistOrder extends AbstractObserver
      *
      * @param Observer $observer
      * @return void
+     * @throws \Exception
      */
     public function execute(Observer $observer)
+    {
+        try{
+            $this->runExecute($observer);
+        }
+        catch(\Exception $e) {
+            $this->logger->critical($e->getMessage());
+        }
+        catch(\Throwable $e){
+            $this->logger->critical($e->getMessage());
+        }
+    }
+
+    /**
+     * Execute Observer
+     *
+     * @param Observer $observer
+     * @return void
+     * @throws \Exception
+     */
+    public function runExecute(Observer $observer)
     {
         /** @var \Magento\Sales\Model\Order $order */
         $order = $observer->getEvent()->getOrder();

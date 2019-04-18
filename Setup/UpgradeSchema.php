@@ -83,6 +83,16 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $connection
             ->addColumn(
                 $this->setup->getTable('plugincompany_fraudprevention_suspicion'),
+                'postcode_normalized',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'comment' => 'Normalized Postcode',
+                    'length' => 255
+                ]
+            );
+        $connection
+            ->addColumn(
+                $this->setup->getTable('plugincompany_fraudprevention_suspicion'),
                 'city_normalized',
                 [
                     'type' => Table::TYPE_TEXT,

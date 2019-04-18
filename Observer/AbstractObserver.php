@@ -32,6 +32,7 @@ use PluginCompany\FraudPrevention\Helper\Data as HelperData;
 use PluginCompany\FraudPrevention\Model\SuspicionFactory;
 use PluginCompany\FraudPrevention\Model\Rule;
 use PluginCompany\FraudPrevention\Model\Attribute\Source\Customeraccount;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractObserver implements ObserverInterface
 {
@@ -126,6 +127,10 @@ abstract class AbstractObserver implements ObserverInterface
      * @var ActionFlag
      */
     private $actionFlag;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     public function __construct(
         Rule $modelRule,
@@ -147,7 +152,8 @@ abstract class AbstractObserver implements ObserverInterface
         Http $response,
         UrlInterface $urlBuilder,
         RedirectInterface $redirectManager,
-        ActionFlag $actionFlag
+        ActionFlag $actionFlag,
+        LoggerInterface $logger
     ) {
         $this->_modelRule = $modelRule;
         $this->_helperData = $helperData;
@@ -169,6 +175,7 @@ abstract class AbstractObserver implements ObserverInterface
         $this->redirectManager = $redirectManager;
         $this->response = $response;
         $this->actionFlag = $actionFlag;
+        $this->logger = $logger;
     }
 
     protected function getRootCookieMetaData()
@@ -219,7 +226,13 @@ abstract class AbstractObserver implements ObserverInterface
         $customer->setPcBlacklisted(Customeraccount::BLACKLISTED);
         try{
             $this->customerRepository->save($customer->getDataModel());
-        }catch(\Throwable $e){ }
+        }
+        catch(\Exception $e) {
+            $this->logger->critical($e->getMessage());
+        }
+        catch(\Throwable $e){
+            $this->logger->critical($e->getMessage());
+        }
         return $this;
     }
 

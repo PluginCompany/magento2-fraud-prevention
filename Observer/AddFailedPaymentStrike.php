@@ -19,6 +19,19 @@ class AddFailedPaymentStrike extends AbstractObserver
      */
     public function execute(Observer $observer)
     {
+        try{
+            $this->runExecute($observer);
+        }
+        catch(\Exception $e) {
+            $this->logger->critical($e->getMessage());
+        }
+        catch(\Throwable $e){
+            $this->logger->critical($e->getMessage());
+        }
+    }
+
+    private function runExecute(Observer $observer)
+    {
         /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $observer->getEvent()->getQuote();
 
