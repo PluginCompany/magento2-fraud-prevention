@@ -85,8 +85,18 @@ class OrderGridPlugin
         $select = $this->collection->getSelect();
         if ($where = $select->getPart('where')) {
             foreach ($where as $key=> $condition) {
-                if (stristr($condition, 'created_at') && !stristr("`main_table`.`created_at`", $condition)) {
-                    $new_condition = str_replace("`created_at`", ("`main_table`.`created_at`"), $condition);
+                if (strpos($condition, 'created_at') !== false) {
+                    $new_condition = str_replace(
+                        array(
+                            " `created_at`",
+                            "(`created_at`"
+                        ),
+                        array(
+                            " `main_table`.`created_at`",
+                            "(`main_table`.`created_at`"
+                        ),
+                        $condition
+                    );
                     $where[$key] = $new_condition;
                 }
             }
