@@ -71,6 +71,24 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
+            <group id="plugincompany_fraudprevention_orderstatus" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Order Status Fraud Suspicion Settings</label>
+                <field id="billing_enabled" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add billing address suspicion based on order status</label>
+                    <comment>When enabled, a fraud suspicion strike for the billing address will be created when an order is saved with one of the order statuses selected below.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="shipping_enabled" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add shipping address suspicion based on order status</label>
+                    <comment>When enabled, a fraud suspicion strike for the shipping address will be created when an order is saved with one of the order statuses selected below.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="order_statuses" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fraudulent order statuses</label>
+                    <source_model>PluginCompany\FraudPrevention\Model\Source\System\Config\OrderStatuses</source_model>
+                    <comment>Select the potential fraudulent order statuses here. For example the custom order statuses related to payment fraud or failed payments.</comment>
+                </field>
+            </group>
             <group id="field_normalization" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Field Normalization Settings</label>
                 <comment>If normalization is enabled for a field and the field is being checked for previous fraudulent orders, all special characters and spaces will be stripped and all alphabetic characters will be converted to non-accented latin characters. In most cases normalization will have a positive effect on the amount of fraudulent orders being detected. </comment>

@@ -1,5 +1,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="sales_order_save_after">
+        <observer name="order_status_strike"
+                  instance="PluginCompany\FraudPrevention\Observer\AddOrderStatusStrike"
+                  shared="false" />
         <observer name="blacklist_order"
                   instance="PluginCompany\FraudPrevention\Observer\BlacklistOrder"
                   shared="false" />

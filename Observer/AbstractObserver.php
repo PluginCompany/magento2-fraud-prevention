@@ -32,6 +32,7 @@ use PluginCompany\FraudPrevention\Helper\Data as HelperData;
 use PluginCompany\FraudPrevention\Model\SuspicionFactory;
 use PluginCompany\FraudPrevention\Model\Rule;
 use PluginCompany\FraudPrevention\Model\Attribute\Source\Customeraccount;
+use PluginCompany\FraudPrevention\Model\SuspicionRepository;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractObserver implements ObserverInterface
@@ -131,6 +132,10 @@ abstract class AbstractObserver implements ObserverInterface
      * @var LoggerInterface
      */
     protected $logger;
+    /**
+     * @var SuspicionRepository
+     */
+    protected $suspicionRepository;
 
     public function __construct(
         Rule $modelRule,
@@ -141,6 +146,7 @@ abstract class AbstractObserver implements ObserverInterface
         RequestInterface $appRequestInterface,
         Registry $frameworkRegistry,
         SuspicionFactory $modelItemFactory,
+        SuspicionRepository $suspicionRepository,
         BackendHelperData $backendHelperData,
         Session $customerSession,
         CookieManagerInterface $_modelCookie,
@@ -176,6 +182,7 @@ abstract class AbstractObserver implements ObserverInterface
         $this->response = $response;
         $this->actionFlag = $actionFlag;
         $this->logger = $logger;
+        $this->suspicionRepository = $suspicionRepository;
     }
 
     protected function getRootCookieMetaData()

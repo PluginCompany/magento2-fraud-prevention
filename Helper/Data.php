@@ -70,7 +70,22 @@ class Data
     {
         return $this->scopeConfig->isSetFlag('plugincompany_fraudprevention/plugincompany_fraudprevention_paymentfailed/shipping', ScopeInterface::SCOPE_STORE);
     }
-    
+
+    public function canAddOrderStatusBillingStrike()
+    {
+        return $this->scopeConfig->isSetFlag('plugincompany_fraudprevention/plugincompany_fraudprevention_orderstatus/billing_enabled', ScopeInterface::SCOPE_STORE);
+    }
+
+    public function canAddOrderStatusShippingStrike()
+    {
+        return $this->scopeConfig->isSetFlag('plugincompany_fraudprevention/plugincompany_fraudprevention_orderstatus/shipping_enabled', ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getOrderStatusStrikeStatuses()
+    {
+        return $this->scopeConfig->getValue('plugincompany_fraudprevention/plugincompany_fraudprevention_orderstatus/order_statuses', ScopeInterface::SCOPE_STORE);
+    }
+
     public function canBlacklistCustomerBasedOnOrder()
     {
         return $this->scopeConfig->isSetFlag('plugincompany_fraudprevention/plugincompany_fraudprevention_customeraccount/afterorder', ScopeInterface::SCOPE_STORE);
