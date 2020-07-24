@@ -205,9 +205,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
             return false;
         }
 
-        if(isset($address['email'])) {
-            $address['email_domain'] = $this->helper->getEmailDomain($address['email']);
-        }
+        $address = $this->addEmailDomainToAddress($address);
 
         $attributes = $this->removeEmailDomainFromAttributesIfExcluded($attributes, $address);
         if(empty($attributes)) {
@@ -248,6 +246,17 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
         if ($collection->getTotalStrikes() >= $strikes) {
             return true;
         }
+    }
+
+    private function addEmailDomainToAddress($address)
+    {
+        if(isset($address['email'])) {
+            $domain = $this->helper->getEmailDomain($address['email']);
+            if($domain) {
+                $address['email_domain'] = $domain;
+            }
+        }
+        return $address;
     }
 
     private function removeEmailDomainFromAttributesIfExcluded($attributes, $address)
