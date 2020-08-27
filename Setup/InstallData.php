@@ -77,7 +77,7 @@ class InstallData implements InstallDataInterface
             'source' => 'PluginCompany\FraudPrevention\Model\Attribute\Source\Customeraccount',
             'required' => false,
             'visible' => true,
-            'position' => 9999999,
+            'position' => 150,
             'system' => false,
             'backend' => '',
             'is_used_in_grid' => true,
