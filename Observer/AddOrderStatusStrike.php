@@ -57,9 +57,10 @@ class AddOrderStatusStrike extends AbstractObserver
     /**
      * @param $addressData
      * @param \Magento\Sales\Model\Order $order
+     * @param int $weight
      * @return $this
      */
-    private function addStrike($addressData, $order)
+    private function addStrike($addressData, $order, $weight = 1)
     {
         $addressData['customer_ip'] = $order->getRemoteIp();
         $item = $this->_modelItemFactory->create();
@@ -69,6 +70,7 @@ class AddOrderStatusStrike extends AbstractObserver
             ->setOrderId($order->getId())
             ->setCustomerId($order->getCustomerId())
             ->setComment("Marked suspicious due to order status")
+            ->setWeight($weight)
             ->save()
         ;
         return $this;

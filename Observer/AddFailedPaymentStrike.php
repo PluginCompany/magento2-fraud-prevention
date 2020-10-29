@@ -48,7 +48,7 @@ class AddFailedPaymentStrike extends AbstractObserver
         }
     }
 
-    private function addStrike($addressData, $quote)
+    private function addStrike($addressData, $quote, $weight = 1)
     {
         $addressData['customer_ip'] = $quote->getRemoteIp();
 
@@ -57,6 +57,7 @@ class AddFailedPaymentStrike extends AbstractObserver
             ->setData($addressData)
             ->setEntityId(null)
             ->setComment("Marked suspicious due to failed payment transaction")
+            ->setWeight($weight)
             ->save()
         ;
         return $this;

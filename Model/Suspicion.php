@@ -9,6 +9,7 @@
 namespace PluginCompany\FraudPrevention\Model;
 
 use PluginCompany\FraudPrevention\Api\Data\SuspicionInterface;
+use PluginCompany\FraudPrevention\Helper\Data;
 use PluginCompany\FraudPrevention\Helper\FieldNormalizationSettings;
 use PluginCompany\FraudPrevention\Helper\FieldNormalizer;
 
@@ -39,12 +40,17 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
      * @var FieldNormalizationSettings
      */
     private $fieldNormalizationSettings;
+    /**
+     * @var Data
+     */
+    private $helper;
 
     public function __construct(
         \Magento\Sales\Model\OrderFactory $salesOrderFactory,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         FieldNormalizer $fieldNormalizer,
         FieldNormalizationSettings $fieldNormalizationSettings,
+        Data $helper,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
@@ -62,6 +68,7 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
         $this->scopeConfig = $scopeConfig;
         $this->fieldNormalizer = $fieldNormalizer;
         $this->fieldNormalizationSettings = $fieldNormalizationSettings;
+        $this->helper = $helper;
     }
 
     /**
@@ -537,9 +544,11 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
     public function beforeSave()
     {
         parent::beforeSave();
+        $this->setDefaultRegionName();
         $this->updateNormalizedFields();
         return $this;
     }
+
     private function updateNormalizedFields()
     {
         return $this
@@ -591,5 +600,16 @@ class Suspicion extends \Magento\Framework\Model\AbstractModel implements Suspic
         return $this->fieldNormalizer->{$func}(
             $this->getData($field)
         );
+    }
+
+    private function setDefaultRegionName()
+    {
+        if(!$this->getRegionId()) return $this;
+
+        $defaultName = $this->helper->getDefaultRegionNameById($this->getRegionId());
+        if($defaultName) {
+            $this->setRegion($defaultName);
+        }
+        return $this;
     }
 }

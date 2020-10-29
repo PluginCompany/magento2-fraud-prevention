@@ -34,13 +34,10 @@ class Attributes implements OptionSourceInterface
 
         $array = array();
         foreach ($details as $k => $detail) {
-            if (in_array($k, array('marked_by_admin', 'entity_id', 'updated_at', 'created_at', 'status'))) {
+            if (in_array($k, array('marked_by_admin', 'entity_id', 'updated_at', 'created_at', 'status', 'suspicion_id', 'region_id', 'weight', 'comment'))) {
                continue;
             }
             if(stristr($k, 'normalized')) {
-                continue;
-            }
-            if($k == 'weight') {
                 continue;
             }
             $array[] = array('label' => ucwords(str_replace('_',' ',$k)),'value'=>$k);

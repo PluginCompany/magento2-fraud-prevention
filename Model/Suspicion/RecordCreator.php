@@ -127,10 +127,14 @@ class RecordCreator
             $this->order->getShippingAddress()
             && ($this->addressType == 'shipping' || $this->addressType == 'both')
         ) {
-            $addressData[] = $this->order->getShippingAddress()->getData();
+            $shippingData = $this->order->getShippingAddress()->getData();
+            unset($shippingData['weight']);
+            $addressData[] = $shippingData;
         }
         if ($this->addressType == 'billing' || $this->addressType == 'both') {
-            $addressData[] = $this->order->getBillingAddress()->getData();
+            $billingData = $this->order->getBillingAddress()->getData();
+            unset($billingData['weight']);
+            $addressData[] = $billingData;
         }
         return $addressData;
     }

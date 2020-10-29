@@ -28,6 +28,9 @@ class FieldMatchingSettings extends AbstractHelper
 
     public function getFilterForAttribute($code, $value)
     {
+        if($value === null) {
+            return ['null' => true];
+        }
         $code = str_replace('_normalized', '', $code);
         return [ $this->getFilterTypeForAttribute($code, $value) => $this->getSearchStringForAttributeValue($code, $value) ];
     }

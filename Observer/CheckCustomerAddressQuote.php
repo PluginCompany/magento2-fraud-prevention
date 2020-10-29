@@ -58,8 +58,6 @@ class CheckCustomerAddressQuote extends AbstractObserver
 
         $session = $this->customerSession;
 
-//        $this->setBlacklistedCookie();
-
         if($session->isLoggedIn()) {
             if(!$this->_frameworkRegistry->registry('customer_blacklisted_now')){
                 $this->_frameworkRegistry->register('customer_blacklisted_now', true);

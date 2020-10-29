@@ -206,6 +206,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
         }
 
         $address = $this->addEmailDomainToAddress($address);
+        $address = $this->helper->addDefaultRegionNameToAddressArray($address);
 
         $attributes = $this->removeEmailDomainFromAttributesIfExcluded($attributes, $address);
         if(empty($attributes)) {
@@ -231,7 +232,6 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
             $collection->addFieldToFilter($code,
                 [
                     $this->fieldMatchingSettings->getFilterForAttribute($code, $attrVal),
-                    ['null' => true]
                 ]
             );
         }

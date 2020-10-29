@@ -5,6 +5,7 @@ use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use PluginCompany\FraudPrevention\Model\ResourceModel\Rule\CollectionFactory as RuleCollectionFactory;
 use PluginCompany\FraudPrevention\Model\ResourceModel\Suspicion\CollectionFactory;
 use Magento\Customer\Model\Customer;
 
@@ -23,13 +24,19 @@ class UpgradeData implements UpgradeDataInterface
      * @var ModuleDataSetupInterface
      */
     private $setup;
+    /**
+     * @var RuleCollectionFactory
+     */
+    private $ruleCollectionFactory;
 
     public function __construct(
         CollectionFactory $suspcionCollectionFactory,
-        CustomerSetupFactory $customerSetupFactory
+        CustomerSetupFactory $customerSetupFactory,
+        RuleCollectionFactory $ruleCollectionFactory
     ) {
         $this->suspcionCollectionFactory = $suspcionCollectionFactory;
         $this->customerSetupFactory = $customerSetupFactory;
+        $this->ruleCollectionFactory = $ruleCollectionFactory;
     }
     /**
      * {@inheritdoc}
@@ -48,7 +55,36 @@ class UpgradeData implements UpgradeDataInterface
             $this->fixCustomerAttributeSortOrder();
         }
 
+        if (version_compare($context->getVersion(), '100.2.6', '<=')) {
+            $this->updateRegionTextFields();
+            $this->changeRegionIdToRegionInRules();
+        }
+
         $setup->endSetup();
+    }
+
+    private function changeRegionIdToRegionInRules()
+    {
+        $ruleCollection = $this->ruleCollectionFactory->create();
+        $ruleCollection->addFieldToFilter('attributes', ['finset' => 'region_id']);
+        foreach($ruleCollection as $rule) {
+            $attributes = explode(',', $rule->getAttributes());
+            $newAttributes = [];
+            foreach($attributes as $attribute) {
+                if($attribute == 'region_id') {
+                    $attribute = 'region';
+                }
+                $newAttributes[$attribute] = $attribute;
+            }
+            $rule
+                ->setAttributes(implode(',', $newAttributes))
+                ->save();
+        }
+    }
+
+    private function updateRegionTextFields()
+    {
+        return $this->triggerSaveAllSuspicions();
     }
 
     private function updateNormalizedFields()

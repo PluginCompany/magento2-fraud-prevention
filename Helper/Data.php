@@ -14,12 +14,33 @@
  */
 namespace PluginCompany\FraudPrevention\Helper;
 
+use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 
 class Data
     extends AbstractHelper {
 
+    /**
+     * Directory region models
+     *
+     * @var \Magento\Directory\Model\Region[]
+     */
+    private static $_regionModels;
+
+    /**
+     * @var RegionFactory
+     */
+    private $regionFactory;
+
+    public function __construct(
+        \Magento\Framework\App\Helper\Context $context,
+        RegionFactory $regionFactory
+    )
+    {
+        parent::__construct($context);
+        $this->regionFactory = $regionFactory;
+    }
     /**
      * convert array to options
      * @access public
@@ -45,7 +66,47 @@ class Data
         }
         return null;
     }
-    
+
+    /**
+     * @param array $address
+     * @return array
+     */
+    public function addDefaultRegionNameToAddressArray($address)
+    {
+        if(empty($address['region_id'])) return $address;
+
+        $defaultName = $this->getDefaultRegionNameById($address['region_id']);
+
+        if($defaultName) {
+            $address['region'] = $defaultName;
+        }
+
+        return $address;
+    }
+
+    public function getDefaultRegionNameById($regionId)
+    {
+        return $this->getRegionModelById($regionId)->getDefaultName();
+    }
+
+    public function getRegionModelById($regionId)
+    {
+        if (!isset(self::$_regionModels[$regionId])) {
+            $region = $this->_createRegionInstance();
+            $region->load($regionId);
+            self::$_regionModels[$regionId] = $region;
+        }
+        return self::$_regionModels[$regionId];
+    }
+
+    /**
+     * @return \Magento\Directory\Model\Region
+     */
+    protected function _createRegionInstance()
+    {
+        return $this->regionFactory->create();
+    }
+
     public function canHidePaymentMethods()
     {
         return $this->scopeConfig->isSetFlag('plugincompany_fraudprevention/plugincompany_fraudprevention_payment/enable', ScopeInterface::SCOPE_STORE);
