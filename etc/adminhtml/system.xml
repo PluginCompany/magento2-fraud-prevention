@@ -48,15 +48,28 @@
             </group>
             <group id="plugincompany_fraudprevention_payment" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Payment Processing Settings</label>
-                <field id="enable" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Block payment processing</label>
-                    <comment>Block payments by hiding the payment methods section during checkout if blacklisted address is used.</comment>
+                <field id="enable" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Block payment processing globally</label>
+                    <comment>Disable all payment methods during checkout if blacklisted address is used.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <!--<field id="text" translate="label" sortOrder="20" type="textarea" showInDefault="1" showInWebsite="1" showInStore="1">-->
-                <!--<label>Error message</label>-->
-                <!--<comment>Message to be displayed instead of the payment methods section (HTML allowed).</comment>-->
-                <!--</field>-->
+                <field id="disable_specific_methods" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Disable specific payment methods</label>
+                    <comment>Disable specific payment methods during checkout if blacklisted address is used.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enable">0</field>
+                    </depends>
+                </field>
+                <field id="methods_to_disable" translate="label" type="multiselect" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Methods to disable</label>
+                    <comment>The selected methods will be disabled when checking out using a fraudulent / blacklisted address.</comment>
+                    <source_model>PluginCompany\FraudPrevention\Model\Source\System\Config\PaymentMethods</source_model>
+                    <depends>
+                        <field id="enable">0</field>
+                        <field id="disable_specific_methods">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="plugincompany_fraudprevention_paymentfailed" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Failed Payment Transaction Settings</label>

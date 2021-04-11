@@ -162,9 +162,10 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
             $attributes = explode(',', $rule->getAttributes());
             if ($this->checkRuleTrigger($attributes, $billingAddress, $rule->getStrikes())
                 || $this->checkRuleTrigger($attributes, $shippingAddress, $rule->getStrikes())){
-                return $rule->getId();
+                return (bool)$rule->getId();
             }
         }
+        return false;
     }
 
     /*

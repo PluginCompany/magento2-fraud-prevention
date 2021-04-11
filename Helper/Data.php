@@ -112,6 +112,16 @@ class Data
         return $this->scopeConfig->isSetFlag('plugincompany_fraudprevention/plugincompany_fraudprevention_payment/enable', ScopeInterface::SCOPE_STORE);
     }
 
+    public function canHideSpecificPaymentMethods()
+    {
+        return $this->scopeConfig->isSetFlag('plugincompany_fraudprevention/plugincompany_fraudprevention_payment/disable_specific_methods', ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getPaymentMethodsToHide()
+    {
+        return explode(',', $this->scopeConfig->getValue('plugincompany_fraudprevention/plugincompany_fraudprevention_payment/methods_to_disable', ScopeInterface::SCOPE_STORE));
+    }
+
     public function getPaymentBlockText()
     {
         return $this->scopeConfig->getValue('plugincompany_fraudprevention/plugincompany_fraudprevention_payment/text', ScopeInterface::SCOPE_STORE);

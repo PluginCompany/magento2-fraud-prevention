@@ -8,7 +8,7 @@
 namespace PluginCompany\FraudPrevention\Observer;
 
 use Magento\Framework\Event\Observer;
-use PluginCompany\FraudPrevention\Model\Attribute\Source\Customeraccount;
+use Magento\Payment\Model\MethodInterface;
 
 class DisablePaymentMethods extends AbstractObserver
 {
@@ -41,16 +41,42 @@ class DisablePaymentMethods extends AbstractObserver
      */
     public function runExecute(Observer $observer)
     {
-        if(!$this->_helperData->canHidePaymentMethods()) return;
         if($this->appState->getAreaCode() == 'adminhtml') return;
+
+        if(
+            !$this->_helperData->canHidePaymentMethods()
+            && !$this->_helperData->canHideSpecificPaymentMethods()
+        ) return;
 
         $quote = $this->checkoutSession->getQuote();
 
         $isBlacklisted = $this->_modelRule->canBlacklistOrder($quote);
         if(!$isBlacklisted) return;
 
+        /**
+         * @var $method MethodInterface
+         */
+        $method = $observer->getEvent()->getMethodInstance();
+        $enabled = !$this->shouldDisableMethod($method);
+
         $result = $observer->getEvent()->getResult();
-        $result->setIsAvailable(false);
+        $result->setIsAvailable($enabled);
+    }
+
+    /**
+     * @param MethodInterface $method
+     * @return bool
+     */
+    private function shouldDisableMethod($method)
+    {
+        if($this->_helperData->canHidePaymentMethods()){
+            return true;
+        }
+        if(!$this->_helperData->canHideSpecificPaymentMethods())
+        {
+            return false;
+        }
+        return in_array($method->getCode(), $this->_helperData->getPaymentMethodsToHide());
     }
 
 
