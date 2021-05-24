@@ -10,6 +10,7 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml\Rule;
 
 class Delete extends \PluginCompany\FraudPrevention\Controller\Adminhtml\Rule
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Rule_delete';
 
     /**
      * Delete action

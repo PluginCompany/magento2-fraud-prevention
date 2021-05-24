@@ -5,32 +5,36 @@
  * This file is part of Fraud Prevention for Magento 2, released under the MIT License.
  * See the LICENSE file in the project root.
  */
-
 namespace PluginCompany\FraudPrevention\Ui\Component\Listing\Column;
 
-class SuspicionActions extends \Magento\Ui\Component\Listing\Columns\Column
-{
+use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\UrlInterface;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Ui\Component\Listing\Columns\Column;
 
+class SuspicionActions extends Column
+{
     const URL_PATH_DELETE = 'plugincompany_fraudprevention/suspicion/delete';
-    protected $urlBuilder;
     const URL_PATH_EDIT = 'plugincompany_fraudprevention/suspicion/edit';
     const URL_PATH_DETAILS = 'plugincompany_fraudprevention/suspicion/details';
 
+    protected $urlBuilder;
     /**
-     * @param \Magento\Framework\View\Element\UiComponent\ContextInterface $context
-     * @param \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param array $components
-     * @param array $data
+     * @var AuthorizationInterface
      */
+    private $authorization;
+
     public function __construct(
-        \Magento\Framework\View\Element\UiComponent\ContextInterface $context,
-        \Magento\Framework\View\Element\UiComponentFactory $uiComponentFactory,
-        \Magento\Framework\UrlInterface $urlBuilder,
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
+        UrlInterface $urlBuilder,
+        AuthorizationInterface $authorization,
         array $components = [],
         array $data = []
     ) {
         $this->urlBuilder = $urlBuilder;
+        $this->authorization = $authorization;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -42,37 +46,75 @@ class SuspicionActions extends \Magento\Ui\Component\Listing\Columns\Column
      */
     public function prepareDataSource(array $dataSource)
     {
-        if (isset($dataSource['data']['items'])) {
-            foreach ($dataSource['data']['items'] as & $item) {
-                if (isset($item['suspicion_id'])) {
-                    $item[$this->getData('name')] = [
-                        'edit' => [
-                            'href' => $this->urlBuilder->getUrl(
-                                static::URL_PATH_EDIT,
-                                [
-                                    'suspicion_id' => $item['suspicion_id']
-                                ]
-                            ),
-                            'label' => __('Edit')
-                        ],
-                        'delete' => [
-                            'href' => $this->urlBuilder->getUrl(
-                                static::URL_PATH_DELETE,
-                                [
-                                    'suspicion_id' => $item['suspicion_id']
-                                ]
-                            ),
-                            'label' => __('Delete'),
-                            'confirm' => [
-                                'title' => __('Delete "${ $.$data.title }"'),
-                                'message' => __('Are you sure you wan\'t to delete a "${ $.$data.title }" record?')
-                            ]
-                        ]
-                    ];
-                }
-            }
+        if (!isset($dataSource['data']['items'])) {
+            return $dataSource;
         }
-        
+        foreach ($dataSource['data']['items'] as &$item) {
+            if (!isset($item['suspicion_id'])) {
+                continue;
+            }
+            if($this->isEditAllowed()) {
+                $item[$this->getData('name')]['edit'] = $this->getEditAction($item);
+            }
+            if($this->isDeleteAllowed()) {
+                $item[$this->getData('name')]['delete'] = $this->getDeleteAction($item);
+            }
+
+        }
         return $dataSource;
+    }
+    
+    private function getEditAction($item)
+    {
+        return [
+            'href' => $this->getEditUrl($item['suspicion_id']),
+            'label' => __('Edit')
+        ];
+    }
+
+    private function getDeleteAction($item)
+    {
+        return [
+            'href' => $this->getDeleteUrl($item['suspicion_id']),
+            'label' => __('Delete'),
+            'confirm' => [
+                'title' => __('Delete "${ $.$data.title }"'),
+                'message' => __('Are you sure you wan\'t to delete the "${ $.$data.title }" record?')
+            ]
+        ];
+    }
+
+    private function getEditUrl($suspicionId)
+    {
+        return $this->urlBuilder
+            ->getUrl(
+                static::URL_PATH_EDIT,
+                ['suspicion_id' => $suspicionId]
+            );
+    }
+
+    private function getDeleteUrl($suspicionId)
+    {
+        return $this->urlBuilder
+            ->getUrl(
+                static::URL_PATH_DELETE,
+                ['suspicion_id' => $suspicionId]
+            );
+    }
+
+    private function isEditAllowed()
+    {
+        return $this->authorization
+            ->isAllowed(
+                'PluginCompany_FraudPrevention::Suspicion_view'
+            );
+    }
+
+    private function isDeleteAllowed()
+    {
+        return $this->authorization
+            ->isAllowed(
+                'PluginCompany_FraudPrevention::Suspicion_delete'
+            );
     }
 }

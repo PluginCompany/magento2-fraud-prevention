@@ -11,6 +11,8 @@ use PluginCompany\FraudPrevention\Controller\Adminhtml\Order;
 
 class WhitelistOrder extends Order
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::OrderPage_whitelist';
+
     public function execute()
     {
         try {

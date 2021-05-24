@@ -10,6 +10,7 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml\Suspicion;
 
 class InlineEdit extends \Magento\Backend\App\Action
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Suspicion_update';
 
     protected $jsonFactory;
 

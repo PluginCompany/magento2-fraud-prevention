@@ -11,6 +11,7 @@ use PluginCompany\FraudPrevention\Controller\Adminhtml\Order;
 
 class AddSuspicion extends Order
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::OrderPage_addSuspicion';
 
     public function execute()
     {

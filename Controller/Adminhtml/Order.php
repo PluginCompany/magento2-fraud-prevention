@@ -20,8 +20,7 @@ use PluginCompany\FraudPrevention\Model\Attribute\Source\Customeraccount;
 
 abstract class Order extends \Magento\Backend\App\Action
 {
-
-    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::top_level';
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::OrderPage';
 
     /**
      * @var Session

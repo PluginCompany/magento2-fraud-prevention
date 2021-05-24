@@ -10,10 +10,9 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml;
 
 abstract class Suspicion extends \Magento\Backend\App\Action
 {
-
-    protected $_coreRegistry;
     const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Suspicion';
 
+    protected $_coreRegistry;
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Registry $coreRegistry

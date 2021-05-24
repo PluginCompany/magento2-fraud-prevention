@@ -10,6 +10,7 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml\Rule;
 
 class InlineEdit extends \Magento\Backend\App\Action
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Rule_update';
 
     protected $jsonFactory;
 

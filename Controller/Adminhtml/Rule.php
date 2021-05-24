@@ -10,9 +10,10 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml;
 
 abstract class Rule extends \Magento\Backend\App\Action
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Rule';
 
     protected $_coreRegistry;
-    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Rule';
+
 
     /**
      * @param \Magento\Backend\App\Action\Context $context

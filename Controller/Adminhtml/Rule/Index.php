@@ -10,6 +10,7 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml\Rule;
 
 class Index extends \Magento\Backend\App\Action
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Rule';
 
     protected $resultPageFactory;
 

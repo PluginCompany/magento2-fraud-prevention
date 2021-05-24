@@ -10,6 +10,7 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml\Suspicion;
 
 class NewAction extends \PluginCompany\FraudPrevention\Controller\Adminhtml\Suspicion
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Suspicion_create';
 
     protected $resultForwardFactory;
 

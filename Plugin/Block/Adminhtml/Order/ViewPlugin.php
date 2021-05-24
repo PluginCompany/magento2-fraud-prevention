@@ -8,6 +8,7 @@
 namespace PluginCompany\FraudPrevention\Plugin\Block\Adminhtml\Order;
 
 use Magento\Backend\Model\UrlInterface;
+use Magento\Framework\AuthorizationInterface;
 use Magento\Sales\Block\Adminhtml\Order\View;
 use PluginCompany\FraudPrevention\Model\SuspicionRepository;
 
@@ -25,18 +26,25 @@ class ViewPlugin
      * @var \Magento\Backend\Model\Url
      */
     private $backendUrl;
+    /**
+     * @var AuthorizationInterface
+     */
+    private $authorization;
 
     /**
      * ViewPlugin constructor.
      * @param SuspicionRepository $suspicionRepository
      * @param UrlInterface $backendUrl
+     * @param AuthorizationInterface $authorization
      */
     public function __construct(
         SuspicionRepository $suspicionRepository,
-        UrlInterface $backendUrl
+        UrlInterface $backendUrl,
+        AuthorizationInterface $authorization
     ) {
         $this->suspicionRepository = $suspicionRepository;
         $this->backendUrl = $backendUrl;
+        $this->authorization = $authorization;
     }
 
     public function beforeSetLayout(View $subject)
@@ -50,10 +58,23 @@ class ViewPlugin
 
     private function addSuspicionButtons()
     {
-        if ($this->isOrderSuspicious()) {
+        if ($this->removeSuspicionButtonAllowed()) {
             return $this->addRemoveSuspicionButton();
         }
-        return $this->addMarkSuspiciousButton();
+        if ($this->addSuspicionButtonAllowed()) {
+            return $this->addMarkSuspiciousButton();
+        }
+        return $this;
+    }
+
+    private function removeSuspicionButtonAllowed()
+    {
+        return $this->isOrderSuspicious() && $this->authorization->isAllowed('PluginCompany_FraudPrevention::OrderPage_removeSuspicion');
+    }
+
+    private function addSuspicionButtonAllowed()
+    {
+        return !$this->isOrderSuspicious() && $this->authorization->isAllowed('PluginCompany_FraudPrevention::OrderPage_addSuspicion');
     }
 
     private function addMarkSuspiciousButton()
@@ -78,9 +99,9 @@ class ViewPlugin
 
     public function addWhitelistButtons()
     {
-        if(!$this->isCurrentOrderBlacklisted()){
-            return $this;
-        }
+        if(!$this->isCurrentOrderBlacklisted()) return $this;
+        if(!$this->whitelistButtonsAllowed()) return $this;
+
         $this
             ->addWhitelistOrderButton()
             ->addWhitelisteCustomerButton()
@@ -92,6 +113,12 @@ class ViewPlugin
     {
         return $this->getOrder()->getStatus() == 'blacklisted';
     }
+
+    private function whitelistButtonsAllowed()
+    {
+        return $this->authorization->isAllowed('PluginCompany_FraudPrevention::OrderPage_whitelist');
+    }
+
 
     private function addWhiteListOrderButton()
     {

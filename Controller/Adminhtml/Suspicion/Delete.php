@@ -10,7 +10,7 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml\Suspicion;
 
 class Delete extends \PluginCompany\FraudPrevention\Controller\Adminhtml\Suspicion
 {
-
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Suspicion_delete';
     /**
      * Delete action
      *

@@ -14,6 +14,7 @@ use PluginCompany\FraudPrevention\Model\SuspicionRepository;
 
 class MassDelete extends Suspicion
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Suspicion_delete';
 
     private $suspicionRepository;
     private $deleted = 0;

@@ -11,6 +11,8 @@ use PluginCompany\FraudPrevention\Controller\Adminhtml\Order;
 
 class RemoveSuspicion extends Order
 {
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::OrderPage_removeSuspicion';
+
     public function execute()
     {
         try {

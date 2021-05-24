@@ -15,6 +15,8 @@ use PluginCompany\FraudPrevention\Model\RuleRepository;
 class MassDelete extends Rule
 {
 
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Rule_delete';
+
     private $ruleRepository;
     private $deleted = 0;
     private $errors = 0;

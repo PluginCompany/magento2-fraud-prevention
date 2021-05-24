@@ -11,6 +11,8 @@ namespace PluginCompany\FraudPrevention\Controller\Adminhtml\Rule;
 class NewAction extends \PluginCompany\FraudPrevention\Controller\Adminhtml\Rule
 {
 
+    const ADMIN_RESOURCE = 'PluginCompany_FraudPrevention::Rule_create';
+
     protected $resultForwardFactory;
 
     /**
