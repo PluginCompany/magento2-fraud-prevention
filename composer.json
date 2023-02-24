@@ -2,7 +2,7 @@
     "name": "plugincompany/fraudprevention",
     "description": "Fraud Prevention Extension",
     "type": "magento2-module",
-    "version": "100.4.4",
+    "version": "100.4.5",
     "license": "MIT",
     "homepage": "https://plugin.company/magento-extensions/fraud-prevention.html",
     "support": {

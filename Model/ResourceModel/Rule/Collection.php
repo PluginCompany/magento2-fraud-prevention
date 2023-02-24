@@ -56,11 +56,12 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
 
     public function addCustomerGroupFilter($groupId)
     {
-        $this
-            ->getSelect()
-            ->where("find_in_set({$this->getAllCustomerGroupsCode()}, customer_groups)")
-            ->orWhere("find_in_set({$groupId}, customer_groups)")
-        ;
+        $this->getSelect()->where(
+            new \Zend_Db_Expr(
+                "find_in_set({$this->getAllCustomerGroupsCode()}, customer_groups) OR find_in_set({$groupId}, customer_groups)"
+            )
+        );
+
         return $this;
     }
 
