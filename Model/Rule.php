@@ -151,7 +151,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
         $billingAddress = $order->getBillingAddress()->getData();
         $billingAddress = $this->_addOrderAttrToAddress($billingAddress, $order);
 
-        if ($shipAddr = $order->getShippingAddress()) {
+        if ($order->getShippingAddress()) {
             $shippingAddress = $order->getShippingAddress()->getData();
             $shippingAddress = $this->_addOrderAttrToAddress($shippingAddress, $order);
         }else{
@@ -375,7 +375,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
      */
     public function getStrikes()
     {
-        return $this->getData(self::STRIKES);
+        return $this->getData(self::STRIKES) ?: 1;
     }
 
     /**

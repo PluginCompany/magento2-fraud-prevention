@@ -86,8 +86,12 @@
 					<item name="dataScope" xsi:type="string">strikes</item>
 					<item name="validation" xsi:type="array">
 						<item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+<!--                        <item name="validate-greater-than-zero" xsi:type="boolean">true</item>-->
+<!--                        <item name="validate-digits" xsi:type="boolean">true</item>-->
 					</item>
-					<item name="notice" xsi:type="string" translate="true">Select the attribute(s) to be compared with existing fraud suspicion records when a new order is placed.</item>
+                    <item name="default" xsi:type="string">1</item>
+					<item name="notice" xsi:type="string" translate="true">The amount of matching fraud suspicion records required to trigger this rule. E.g. if strikes is set to 3, the rule will be triggered if 3 or more matching fraud suspicion records are found.</item>
 				</item>
 			</argument>
 		</field>
